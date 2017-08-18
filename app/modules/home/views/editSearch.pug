@@ -1,0 +1,24 @@
+extends ../../../templates/master.pug
+
+block content
+    
+    ol.breadcrumb
+      li
+        a(href='/index/yourPost') All Posts
+      li.active
+        a(href='/index/edit') <strong> Edit Post </strong>
+      li
+        a(href='/index/delete')  Delete Post
+    
+    br
+    
+    h4 Choose title you want to edit:
+    form(method='POST' action='/index/editpost')
+        select.form-control(name="selectTitle")
+            each t in titles
+                option(value=`${t.title}`)=`${t.title}`
+        br
+        input.btn.btn-default(type='submit', value='Edit')
+        
+    
+    block content2

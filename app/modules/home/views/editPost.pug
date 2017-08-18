@@ -1,0 +1,31 @@
+extends editSearch.pug
+
+block content2
+
+    
+    form(method='POST' action="/index/edit"  onSubmit="if(!confirm('Are you sure you want to edit?')){return false;}")
+    
+        .row
+            .col-md-1
+                h5 <strong> Title: </strong>
+            .col-md-8
+                textarea.form-control(rows='1' name="title" required oninvalid="this.setCustomValidity('Enter the TITLE of your post!')" oninput="setCustomValidity('')").value= `${title}`
+        br
+        .row
+            .col-md-1
+                h5 <strong> Your Post </strong>
+            .col-md-8
+                textarea.form-control(rows='3' name="post" required oninvalid="this.setCustomValidity('Say something about your POST!')" oninput="setCustomValidity('')").value= `${post}`
+        br
+
+        .row
+            .col-md-4
+                h5 <strong> Choose Category: </strong>
+                select.form-control(name="selectCateg")
+                    each c in category
+                        option(value=`${c.categoryName}`)=`${c.categoryName}`
+
+            .col-md-8
+                br
+                br
+                input.btn.btn-default(type='submit', value='Submit')

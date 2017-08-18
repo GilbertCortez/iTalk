@@ -1,0 +1,32 @@
+//- This is how we extend a template using the 'extends' keyword
+extends ../../../templates/master.pug
+
+//- This is how we insert dynamic content to extended templates
+block content
+
+    - var userType = type
+    
+    if userType == 0
+        ol.breadcrumb
+          li
+            a(href='/index/category') Categories
+          li.active
+            a(href='/index/addCategory') Add Category
+          li
+            a(href='/index/editCategory') Edit Category
+    br
+    br
+    h1 Add Category
+    br
+    .row
+        .col-md-2
+        .col-md-5
+            if alert == 0
+                .alert.alert-danger(role='alert') <strong> ERROR! </strong> Duplicate Category.
+    
+    form(method="POST" action="/index/addCategory" onSubmit="if(!confirm('Proceed?')){return false;}" )
+        .field
+            .label Category Name
+            .control
+                textarea.form-control(rows='3' type="text" placeholder="" name="categoryname" required oninvalid="this.setCustomValidity('Enter a valid CATEGORY NAME!')" oninput="setCustomValidity('')")
+                input.btn.btn-default(type='submit', value='Submit'  )

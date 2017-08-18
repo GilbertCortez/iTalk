@@ -1,0 +1,21 @@
+extends ../../../templates/master.pug
+
+block content
+    
+    ol.breadcrumb
+      li
+        a(href='/index/yourPost')  All Posts
+      li
+        a(href='/index/edit') Edit Post 
+      li.active
+        a(href='/index/delete') <strong> Delete Post </strong>
+    
+    br
+    
+    h4 Choose title you want to delete:
+    form(method='POST' action='/index/delete' onSubmit="if(!confirm('Are you sure you want to delete this post?')){return false;}")
+        select.form-control(name="selectTitle")
+            each t in title
+                option(value=`${t.title}`)=`${t.title}`
+        br
+        input.btn.btn-default(type='submit', value='Delete'  )

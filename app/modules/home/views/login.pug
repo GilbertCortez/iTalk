@@ -1,0 +1,33 @@
+extends ../../../templates/loginTemplate.pug
+
+block content
+    
+    .row
+        .col-md-2
+        .col-md-5
+            h2 <font face="Lucida Calligraphy" size="6" >SIGN IN</font>
+    br
+    
+    .row
+        .col-md-2
+        .col-md-5
+            if alert == 0
+                .alert.alert-danger(role='alert') <strong> NOTE! </strong> The email address and password you entered is incorrect.
+    
+    .row
+        .col-md-2
+        .col-md-5
+            form(method='POST' action="/logins")
+                  .form-group
+                    label(for='exampleInputEmail1') Email address
+                    input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email' name="email" required oninvalid="this.setCustomValidity('Please enter your valid email address!')" oninput="setCustomValidity('')")
+                    small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+                  .form-group
+                    label(for='exampleInputPassword1') Password
+                    input#exampleInputPassword1.form-control(type='password', placeholder='Password' name="password" required oninvalid="this.setCustomValidity('Please enter your password!')" oninput="setCustomValidity('')")
+                  button.btn.btn-primary(type='submit') Submit
+            
+            p No Account?
+            a(href='signup/signUp') Click here
+                
+    

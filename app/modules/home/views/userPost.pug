@@ -1,0 +1,30 @@
+//- This is how we extend a template using the 'extends' keyword
+extends ../../../templates/master.pug
+
+//- This is how we insert dynamic content to extended templates
+block content
+
+    - var hasPost = userPost.length
+    
+    ol.breadcrumb
+      li.active
+        a(href='/index/yourPost') <strong> All Posts </strong>
+      li
+        a(href='/index/edit') Edit Post
+      li
+        a(href='/index/delete') Delete Post
+    
+    br
+    if hasPost == 0
+        p No posts
+        
+    else
+       div
+        each p in post
+            font(face="Gulim" size=6 color="#277455")=`${p.title}`
+            br
+            font(size=4)= `${p.content}` 
+            br
+            font(size=1)=`🕑 ${p.date}`
+            br
+            <hr style="height:1px; border:none; color:#000; background-color:#000;">

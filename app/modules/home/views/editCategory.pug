@@ -1,0 +1,20 @@
+extends editCategorySearch.pug
+
+block content2
+
+    br
+    .row
+        .col-md-9
+            if alert == 0
+                .alert.alert-danger(role='alert') <strong> ERROR! </strong> Duplicate Category.
+                
+    br
+    form(method="POST" action="/index/editCategory" onSubmit="if(!confirm('Proceed?')){return false;}")
+        .row
+            .col-md-1
+                h5 <strong> Category Name: </strong>
+            .col-md-8
+                textarea.form-control(rows='1' name="categoryname" required oninvalid="this.setCustomValidity('Enter a valid CATEGORY NAME!')" oninput="setCustomValidity('')").value= `${catValue}`
+                br
+                input.btn.btn-default(type='submit', value='Submit'  )
+                

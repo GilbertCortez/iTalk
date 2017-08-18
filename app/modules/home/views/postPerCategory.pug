@@ -1,0 +1,23 @@
+extends ../../../templates/master.pug
+
+block content
+    - var userType = type
+    
+    if userType == 0
+        ol.breadcrumb
+          li.breadcrumb-item
+            a(href='#') Categories
+          li.breadcrumb-item
+            a(href='#') Add Category
+          li.breadcrumb-item.active Edit Category
+
+    br
+    br
+    
+    h2=`Category: ${cat}`
+    br
+    each p in post
+        h3=`${p.title}`
+            h4=`${p.content}`
+                h6=`posted on ${p.date}`
+        

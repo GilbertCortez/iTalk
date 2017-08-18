@@ -1,0 +1,28 @@
+extends ../../../templates/master.pug
+
+block content
+
+    - var userType = type
+    
+    if userType == 0
+        ol.breadcrumb
+          li
+            a(href='/index/category') Categories
+          li
+            a(href='/index/addCategory') Add Category
+          li.active
+            a(href='/index/editCategory') Edit Category
+    br
+    br
+
+    h2 Edit Category
+    br
+    h4 Select a category:
+    form(method='POST' action='/index/editCategoryName')
+        select.form-control(name="category")
+            each c in category
+                option(value=`${c.categoryName}`)=`${c.categoryName}`
+        br
+        input.btn.btn-default(type='submit', value='Edit')
+        
+    block content2
