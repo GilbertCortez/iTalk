@@ -23,7 +23,7 @@ var postresults = "";
 
 
 
-// ---------- WALANG KWENTA -------------
+
 signUprouter.get('/', (req,res) =>{
     res.render('home/views/login');
 });
@@ -66,7 +66,7 @@ signUprouter.post('/login', (req,res) =>{
 
 
 
-// ---------- WALANG KWENTA -------------
+
 signUprouter.get('/signUp', (req,res) =>{
     res.render('home/views/signUp');
     });
@@ -79,7 +79,7 @@ signUprouter.post('/signUp', (req,res) =>{
     
     db.query(`Select * from user_tbl where username = "${username}" || emailaddress = "${email}" `, (err,results,fields) =>{
         if (results == null || results == ""){
-            //console.log("DB");
+
             db.query(`INSERT INTO user_tbl (username,emailAddress,password,birthdate) VALUES ("${username}","${email}","${password}","${req.body.bday}")`, (err, results, fields) => {
             if (err) console.log(err);
                  return res.redirect('/logins');
@@ -88,7 +88,6 @@ signUprouter.post('/signUp', (req,res) =>{
                
         }
         else{
-            //console.log("ERROR");
                 res.render('home/views/signUp', {alert: 0});
         }
     
@@ -98,7 +97,7 @@ signUprouter.post('/signUp', (req,res) =>{
 
 
 
-// ---------- MAINPAGE -------------
+
 router.get('/mainpage', (req, res) => {
     
     
@@ -118,12 +117,12 @@ router.get('/mainpage', (req, res) => {
             if (err) console.log(err);
            db.query(`Select username from user_tbl where username = "${req.session.user.username}" and username in (select userName from user_tbl where  DAY(birthdate) = DAY(CURDATE()) and MONTH(birthdate) = MONTH(CURDATE())) `, (err, birthday, fields) =>{
 
-			if(birthday==""){
-                res.render('home/views/mainPage', {n: `${req.session.user.username}`, bday:"", post: results, category: cate});
-            }
-			else{
-                res.render('home/views/mainPage', {n: `${req.session.user.username}`, bday: birthday[0].username , post: results, category: cate});
-            }
+                if(birthday=="" || birthday == null){
+                    res.render('home/views/mainPage', {n: `${req.session.user.username}`, bday:"", post: results, category: cate});
+                }
+                else{
+                    res.render('home/views/mainPage', {n: `${req.session.user.username}`, bday: 2 , post: results, category: cate});
+                }
 				   
 				   
             });
@@ -155,7 +154,7 @@ router.post('/create', (req,res) =>{
             }
             else{
                  db.query(`SELECT * from post_tbl JOIN user_tbl ON post_tbl.userID = user_tbl.userID JOIN post_category_tbl ON post_category_tbl.categoryID = post_tbl.categoryID  where post_tbl.status = 1 Order By post_tbl.id desc `,(err, results2, fields) =>{
-                     res.render('home/views/mainPage', {alert: 0, n: `${req.session.user.username}`, bday:"", post: results2, category: categg});
+                     res.render('home/views/mainPage', {alert: 0, bday: "", n: `${req.session.user.username}`, post: results2, category: categg});
                  });
                 
                 
@@ -169,7 +168,7 @@ router.post('/create', (req,res) =>{
             if (err) console.log(err);
             
             db.query(`SELECT * from post_tbl JOIN user_tbl ON post_tbl.userID = user_tbl.userID JOIN post_category_tbl ON post_category_tbl.categoryID = post_tbl.categoryID  where post_tbl.status = 1 Order By post_tbl.id desc `,(err, results2, fields) =>{
-                 res.render('home/views/mainPage', {alert: 1, n: `${req.session.user.username}`, bday:"", post: results2, category: categg});
+                 res.render('home/views/mainPage', {alert: 1, bday: "", n: `${req.session.user.username}`, post: results2, category: categg});
         
             });
            
@@ -183,7 +182,7 @@ router.post('/create', (req,res) =>{
 
 
 
-// --------- EDIT THE POST ------------
+
 
 var titles;
 
@@ -192,10 +191,9 @@ router.get('/edit', (req,res) =>{
            
             
         if (err) console.log(err);
-        console.log(results);
         titles = results;
         
-        res.render('home/views/editSearch', {titles: results});
+        res.render('home/views/editSearch', {titles: titles});
                 
         });
 });
@@ -211,7 +209,7 @@ router.post('/editPost', (req,res) => {
 
 
             if (err) console.log(err);
-            var categ = results;
+            categg = results;
             rend(categ);       
             });
 
@@ -220,10 +218,9 @@ router.post('/editPost', (req,res) => {
 
 
             if (err) console.log(err);
-            //console.log(results[0].ID);
             currentPost = results[0].ID;
 
-            res.render('home/views/editPost', {title: results[0].title, post: results[0].content, category: categ, selected: results[0].categoryName, titles: titles});
+            res.render('home/views/editPost', {title: results[0].title, post: results[0].content, category: categg, selected: results[0].categoryName, titles: titles});
 
             });
         }
@@ -245,7 +242,10 @@ router.post('/edit', (req,res) =>{
                 rend(categoryNum);
             }
             else{
-                res.redirect('/index/edit');
+                db.query(`SELECT * from \`${tablePost}\` where \`userID\` = ${req.session.user.userID} AND status = 1`,(err, resul, fields) =>{
+                    res.render('home/views/editSearch', {titles: resul, alert: 0});
+                });
+                
             }
         });
             
@@ -254,21 +254,23 @@ router.post('/edit', (req,res) =>{
     function rend(number){
         db.query(`UPDATE \`${tablePost}\` SET  \`categoryID\` = ${number}, \`title\` = "${req.body.title}", \`content\` = "${req.body.post}", \`date\` = "2017-08-10" WHERE \`ID\` = ${currentPost} `, (err, results, fields) => {
             if (err) console.log(err);
-            res.redirect('/index/mainpage');
+            db.query(`SELECT * from \`${tablePost}\` where \`userID\` = ${req.session.user.userID} AND status = 1`,(err, resul, fields) =>{
+                res.render('home/views/editSearch', {titles: resul, alert: 2});
+            });
+            
         });
     }
 });
 
 
 
-// --------- DELETE THE POST --------------
+
 
 router.get('/delete', (req,res) =>{
     db.query(`SELECT * from \`${tablePost}\` where \`userID\` = ${req.session.user.userID}  AND status =1 `,(err, results, fields) =>{
            
         
         if (err) console.log(err);
-        //console.log(results);
         
         res.render('home/views/deletePost', {title: results});
                 
@@ -283,8 +285,12 @@ router.post('/delete', (req,res) => {
     }
     else{
         db.query(`UPDATE \`${tablePost}\` SET  \`status\` = 0 WHERE \`title\` = "${req.body.selectTitle}" `, (err, results, fields) => {
-            if (err) console.log(err);
-            res.redirect('/index/yourPost');
+            
+            db.query(`SELECT * from \`${tablePost}\` where \`userID\` = ${req.session.user.userID}  AND status =1 `,(err, results, fields) =>{
+                if (err) console.log(err);
+            res.render('home/views/deletePost', {title: results, alert: 2});
+            });
+            
         });
     }
     
@@ -293,14 +299,14 @@ router.post('/delete', (req,res) => {
 
 
 
-// ---------- SHOW YOUR POSTS ONLY -------------
+
 
 router.get('/yourPost', (req,res) =>{
     db.query(`SELECT * from \`${tablePost}\` where status = 1 AND userID = ${req.session.user.userID} `,(err, results, fields) =>{
            
         console.log(req.session.user.userID);
         if (err) console.log(err);
-        //console.log(results);
+   
         
         res.render('home/views/userPost', {post: results, userPost: req.session.user.userID});
                 
@@ -308,12 +314,11 @@ router.get('/yourPost', (req,res) =>{
 });
 
 
-// ---------- SHOW POST PER CATEGORY -----------
+
 
 router.get('/category', (req,res) =>{
     db.query(`SELECT * from \`${tableCategory}\` `, (err,results,fields) =>{
         if (err) console.log(err);
-        console.log(req.session.user.userType);
         
         res.render('home/views/categoriesPage', {category: results, type: req.session.user.userType});
     });
@@ -336,7 +341,7 @@ router.post('/category', (req,res) =>{
     
 });
 
-// ---------- ADD CATEGORY -------------------
+
 
 router.get('/addCategory', (req, res) => {
     res.render('home/views/addCategory', {type: req.session.user.userType});
@@ -348,7 +353,7 @@ router.post('/addCategory', (req, res) => {
         if (results == null || results == ""){
                db.query(`INSERT INTO \`post_category_tbl\` (\`categoryName\`)  VALUES ("${req.body.categoryname}")`, (err, results, fields) => {
                     if (err) console.log(err);
-                    res.redirect('/index/mainpage');
+                    res.render('home/views/addCategory', {alert: 2, type: req.session.user.userType});
                 }); 
         }
         else{
@@ -359,7 +364,7 @@ router.post('/addCategory', (req, res) => {
     
 });
 
-// ----------- EDIT CATEGORY ------------------
+
 
 var categ;
 var categoryNum = 0;
@@ -370,7 +375,7 @@ router.get('/editCategory', (req, res) => {
     db.query(`SELECT \`categoryName\` from \`post_category_tbl\``,(err, results, fields) =>{
         
      if (err) console.log(err);
-     //console.log(results);
+   
      res.render('home/views/editCategorySearch', {category: results, type: req.session.user.userType});
      });
      
@@ -414,7 +419,7 @@ router.post('/editCategory', (req,res) => {
     function rend(number){
         db.query(`UPDATE \`post_category_tbl\` SET  \`categoryName\` = "${req.body.categoryname}" where \`categoryID\` = ${categoryNum} `, (err, results, fields) => {
             if (err) console.log(err);
-            res.redirect('/index/mainpage');
+            res.redirect('/index/editCategory');
         });
     }
 });

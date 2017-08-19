@@ -12,6 +12,14 @@ block content
     
     br
     
+    br
+    .row
+        .col-md-8
+            if alert == 0
+                .alert.alert-danger(role='alert') <strong> ERROR! </strong> Duplicate Title of Post.
+            if alert == 2
+                .alert.alert-success(role='alert') <strong> Well done! </strong> You successfully edit your post.
+    
     h4 Choose title you want to edit:
     form(method='POST' action='/index/editpost')
         select.form-control(name="selectTitle")

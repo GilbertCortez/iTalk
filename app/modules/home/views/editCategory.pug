@@ -4,9 +4,12 @@ block content2
 
     br
     .row
-        .col-md-9
+        .col-md-1
+        .col-md-8
             if alert == 0
                 .alert.alert-danger(role='alert') <strong> ERROR! </strong> Duplicate Category.
+            if alert == 2
+                .alert.alert-success(role='alert') <strong> Success! </strong> You successfully edit a category.
                 
     br
     form(method="POST" action="/index/editCategory" onSubmit="if(!confirm('Proceed?')){return false;}")

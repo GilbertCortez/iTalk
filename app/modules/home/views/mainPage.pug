@@ -7,8 +7,9 @@ block content
     
     if bday==""
     else
-        script.
-            alert("HAPPY BIRTHDAY! 🎈🎁🎊🎉");
+        .row
+            .col-md-9
+                .alert.alert-info(role='alert') <strong> HAPPY BIRTHDAY! </strong> The world is full of beautiful things. Just like you! ;)
     br
     font(face="Gulim" size=6)= `Hello ${n}!🖐️ Want to share something?`
     form(method='POST' action="/index/create" onSubmit="if(!confirm('Is POST DETAILS are finalized? Please confirm before you procede.')){return false;}")

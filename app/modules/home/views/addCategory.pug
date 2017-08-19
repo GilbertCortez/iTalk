@@ -19,10 +19,11 @@ block content
     h1 Add Category
     br
     .row
-        .col-md-2
-        .col-md-5
+        .col-md-8
             if alert == 0
                 .alert.alert-danger(role='alert') <strong> ERROR! </strong> Duplicate Category.
+            if alert == 2
+                .alert.alert-success(role='alert') <strong> Success! </strong> You've added a Category.
     
     form(method="POST" action="/index/addCategory" onSubmit="if(!confirm('Proceed?')){return false;}" )
         .field
