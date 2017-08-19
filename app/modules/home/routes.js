@@ -202,7 +202,7 @@ router.get('/edit', (req,res) =>{
 
 router.post('/editPost', (req,res) => {
     
-    if (`${req.body.selectTitle}` == null || `${req.body.selectTitle}` ){
+    if (`${req.body.selectTitle}` == null || `${req.body.selectTitle}` == ""){
         res.redirect('/index/yourPost');
     } 
     else{
